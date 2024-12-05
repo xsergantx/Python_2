@@ -53,7 +53,7 @@ class Guest(Thread):# наследование потока
         sleep(randint(3, 10))# ожидание от 3 до 10 сек.
 
 
-class Cafe:# клас кафе
+class Cafe:# класс кафе
     def __init__(self, *tables: Table):
         self.tables = tables  # столы в этом кафе
         self.queue = Queue()  # очередь
@@ -94,17 +94,16 @@ class Cafe:# клас кафе
                         table.guest = None
 
 
-if __name__ == '__main__':
-    # Создание столов
-    tables = [Table(number) for number in range(1, 6)]
-    # Имена гостей
-    guests_names = ['Мария', 'Олег', 'Вадим', 'Сергей', 'Даша', 'Арман',
-                    'Виктория', 'Никита', 'Галина', 'Павел', 'Илья',
-                    'Александра']
-    # Создание гостей
-    guests = [Guest(name) for name in guests_names]
-    # Заполнение кафе столами
-    cafe = Cafe(*tables)
-    # Приём гостей
-    cafe.guest_arrival(*guests)
-    # Обслуживание гостей
+tables = [Table(number) for number in range(1, 6)]
+# Имена гостей
+guests_names = [
+'Мария', 'Олег', 'Вадим', 'Сергей', 'Даша', 'Арман', 'Виктория', 'Никита', 'Галина', 'Павел', 'Илья', 'Александра']
+# Создание гостей
+guests = [Guest(name) for name in guests_names]
+# Заполнение кафе столами
+cafe = Cafe(*tables)
+# Приём гостей
+cafe.guest_arrival(*guests)
+# Обслуживание гостей
+cafe.discuss_guests()
+
