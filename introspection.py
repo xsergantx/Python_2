@@ -21,62 +21,54 @@
 
 # Домашнее задание по теме "Интроспекция"
 import inspect
-from pprint import pprint
 
 
-class Class1():
-    at = 1
+def introspection_info(obj):
+    # Получаем тип объекта
+    obj_type = type(obj).__name__
 
-    def test(x):
+    # Получаем атрибуты объекта
+    attributes = [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__")]
+
+    # Получаем методы объекта
+    methods = [method for method in dir(obj) if callable(getattr(obj, method)) and not method.startswith("__")]
+
+    # Получаем модуль, к которому принадлежит объект
+    try:
+        module = inspect.getmodule(obj).__name__
+    except AttributeError:
+        module = None
+
+    # Возвращаем словарь с информацией
+    return {
+        'type': obj_type,
+        'attributes': attributes,
+        'methods': methods,
+        'module': module
+    }
+
+
+# Пример использования
+number_info = introspection_info(42)
+print(number_info)
+
+
+# Создаем свой класс и объект для демонстрации
+class MyClass:
+    def __init__(self):
+        self.attribute1 = 10
+        self.attribute2 = "Hello"
+
+    def method1(self):
+        pass
+
+    def method2(self):
         pass
 
 
-def introspection_info(obj=None, **kwargs):
-    info_dic: dict = {}
-    try:
-        print(f'\n\033[93mИсследуем объект {obj.__name__}\033[0m')
-    except AttributeError:
-        print(f'\n\033[93mИсследуем объект {obj}\033[0m')
-    print('Тип объекта:', type(obj), sep='\n\t')
-    info_dic['type'] = type(obj)
-    print('Атрибуты объекта:', dir(obj), sep='\n\t')
-    info_dic['attributes'] = dir(obj)
-    method_list = []
-    for attr_name in dir(obj):
-        attr = getattr(obj, attr_name)
-        print(f'Имя: {attr_name:<20} Тип: {str(type(attr)):<40} Исполняемый: {callable(attr)}')
-        if callable(attr):
-            method_list.append(attr_name)
-    info_dic['methods'] = method_list
-    print('Модуль, к которому объект принадлежит:', inspect.getmodule(obj), sep='\n\t')
-    info_dic['module'] = inspect.getmodule(obj)
-    if inspect.isfunction(obj):
-        sign = inspect.signature(obj)
-        print('Передаваемый в функцию параметры:', sign.parameters, sep='\n\t')
-        param_list = []
-        for p_name, param in sign.parameters.items():
-            param_list.append([param.name, param.default])
-        info_dic['signature'] = param_list
-        print('-' * 50)
-    return info_dic
-
-
-info = introspection_info(42)
-print()
-pprint(info)
-
-info = introspection_info(introspection_info)
-print()
-pprint(info)
-
-info = introspection_info(Class1)
-print()
-pprint(info)
-
-obj_class1 = Class1()
-info = introspection_info(obj_class1)
-print()
-pprint(info)
+my_object = MyClass()
+my_object_info = introspection_info(my_object)
+print(my_object_info)
 
 info = introspection_info()
 print()
